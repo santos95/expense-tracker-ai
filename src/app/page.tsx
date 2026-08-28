@@ -7,6 +7,7 @@ import { SummaryCards } from "@/components/SummaryCards";
 import { CategoryPieChart } from "@/components/CategoryPieChart";
 import { MonthlyTrendChart } from "@/components/MonthlyTrendChart";
 import { ExpenseFormModal } from "@/components/ExpenseFormModal";
+import { ExportDrawer } from "@/components/export/ExportDrawer";
 import { CategoryBadge } from "@/components/CategoryBadge";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
@@ -20,6 +21,7 @@ import {
 export default function DashboardPage() {
   const { expenses, isLoading } = useExpenses();
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
 
   const monthExpenses = getExpensesForMonth(expenses, getCurrentMonthKey());
   const categoryTotals = getCategoryTotals(monthExpenses);
@@ -45,27 +47,50 @@ export default function DashboardPage() {
             An overview of your spending activity.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setIsAddOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => setIsExportOpen(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Add Expense
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+              />
+            </svg>
+            Export...
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsAddOpen(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-700"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Expense
+          </button>
+        </div>
       </div>
 
       {expenses.length === 0 ? (
@@ -157,6 +182,11 @@ export default function DashboardPage() {
       )}
 
       <ExpenseFormModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} />
+      <ExportDrawer
+        isOpen={isExportOpen}
+        expenses={expenses}
+        onClose={() => setIsExportOpen(false)}
+      />
     </div>
   );
 }
